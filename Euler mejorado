@@ -1,0 +1,367 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProyectoEuler1
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			bool Offsalir = false;
+
+			while (!Offsalir)
+			{
+
+				try
+				{
+					Console.WriteLine("*********  Metodos Numericos  *********");
+					Console.WriteLine("1. Portada");
+					Console.WriteLine("2. Teoria de Euler");
+					Console.WriteLine("3. Practica Euler");
+					Console.WriteLine("4. Practica Euler Mejorado");
+					Console.WriteLine("5. Salir");
+					Console.WriteLine("Elige una de las opciones y presione enter");
+					int opt = Convert.ToInt32(Console.ReadLine());
+
+					switch (opt)
+					{
+						case 1:
+							Console.Clear();
+							Portada();
+							Console.Clear();
+							break;
+
+						case 2:
+							Console.Clear();
+							TeoriaEuler();
+							Console.Clear();
+							break;
+
+						case 3:
+							Console.Clear();
+							EjecutarEuler();
+							Console.Clear();
+							break;
+
+						case 4:
+							Console.Clear();
+							EjecutarEulerm();
+							Console.Clear();
+							break;
+
+						case 5:
+							Console.WriteLine("Salir de la aplicacion");
+							Offsalir = true;
+							Environment.Exit(0);
+							break;
+
+						default:
+							Console.WriteLine("Elige una opcion entre 1 y 4");
+							break;
+					}
+
+				}
+				catch (FormatException e)
+				{
+					Console.WriteLine(e.Message);
+
+					Console.WriteLine("Presione Enter para continuar");
+
+					Console.ReadLine();
+
+					Console.Clear();
+				}
+			}
+
+			Console.ReadLine();
+
+
+		}
+
+		static void EjecutarEuler()
+		{
+			// Pedir Datos
+			int X0;
+			Console.WriteLine("Valor Inicial de X0: ");
+			bool Isvalidation1 = false;
+			do
+			{
+				Isvalidation1 = (Int32.TryParse(Console.ReadLine(), out X0));
+				if (!Isvalidation1 | X0 < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor inicial de X0: ");
+				}
+			} while (!Isvalidation1 | X0 < 0);
+
+
+			int Y0;
+			Console.WriteLine("Valor inicial de Y0: ");
+			bool Isvalidation2 = false;
+			do
+			{
+				Isvalidation2 = (Int32.TryParse(Console.ReadLine(), out Y0));
+				if (!Isvalidation2 | Y0 < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor inicial de  Y0: ");
+				}
+			} while (!Isvalidation2 | Y0 < 0);
+
+			float saltos;
+			bool Isvalidation = false;
+			Console.WriteLine("Valor de h: ");
+			do
+			{
+				Isvalidation = (Single.TryParse(Console.ReadLine(), out saltos));
+				if (!Isvalidation | saltos < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor de h");
+				}
+			} while (!Isvalidation | saltos < 0);
+
+			int num_ite;
+			Console.WriteLine("Cuantas iteraciones necesitas?: ");
+			bool Isvalidation3 = false;
+			do
+			{
+				Isvalidation3 = (Int32.TryParse(Console.ReadLine(), out num_ite));
+				if (!Isvalidation3 | num_ite < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Cuantas iteraciones necesitas?: ");
+				}
+			} while (!Isvalidation3 | num_ite < 0);
+
+
+			Console.WriteLine(Euler(X0, Y0, saltos, num_ite));
+
+		}
+
+
+		static bool Euler(int X, int Y, float salto, int iteracion)
+		{
+			Console.WriteLine("*************   Resultados del metodo de Euler   *************");
+			double XN = X;
+			double YEuler = Y;
+			double YReal = Y;
+			double YEulerM = Y;
+
+			int NI = 0;
+			int iter = 1;
+
+			double error = (((YReal - YEuler) / (YReal)) * 100);
+
+			XN = Math.Round(XN, 6);
+			YReal = Math.Round(YReal, 6);
+			YEuler = Math.Round(YEuler, 6);
+			error = Math.Round(error, 6);
+
+
+
+			Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|", "Iteraccion", "Xn", "Y Real", "Yeuler", "Error Euler"));
+			Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|", NI, XN, YReal, YEuler, error));
+			NI = NI + 1;
+
+
+			do
+			{
+				int NIMostrar = NI;
+				NI = NI + 1;
+				YEuler = YEuler + (salto * ((Math.Sqrt(YEuler) / ((2 * (XN) + 1)))));
+				XN = XN + salto;
+				YReal = (((Math.Log((2 * XN) + 1)) / 4) + 2) * (((Math.Log((2 * XN) + 1)) / 4) + 2);
+				YReal = Math.Round(YReal, 6);
+				YEuler = Math.Round(YEuler, 6);
+				double errorEuler = Math.Abs((((YReal - YEuler) / YReal) * 100));
+				errorEuler = Math.Round(errorEuler, 6);
+				XN = Math.Round(XN, 6);
+				Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|", NIMostrar, XN, YReal, YEuler, errorEuler));
+				NIMostrar = NIMostrar + 1;
+				iter++;
+			} while (iter <= iteracion);
+			Console.WriteLine();
+			Console.WriteLine("Presione Enter para Regresar");
+			Console.ReadKey();
+			return true;
+		}
+
+
+		static void EjecutarEulerm()
+		{
+			// Pedir Datos
+			int X0;
+			Console.WriteLine("Valor Inicial de X0: ");
+			bool Isvalidation1 = false;
+			do
+			{
+				Isvalidation1 = (Int32.TryParse(Console.ReadLine(), out X0));
+				if (!Isvalidation1 | X0 < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor inicial de X0: ");
+				}
+			} while (!Isvalidation1 | X0 < 0);
+
+
+			int Y0;
+			Console.WriteLine("Valor inicial de Y0: ");
+			bool Isvalidation2 = false;
+			do
+			{
+				Isvalidation2 = (Int32.TryParse(Console.ReadLine(), out Y0));
+				if (!Isvalidation2 | Y0 < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor inicial de  Y0: ");
+				}
+			} while (!Isvalidation2 | Y0 < 0);
+
+			float saltos;
+			bool Isvalidation = false;
+			Console.WriteLine("Valor de h: ");
+			do
+			{
+				Isvalidation = (Single.TryParse(Console.ReadLine(), out saltos));
+				if (!Isvalidation | saltos < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Valor de h");
+				}
+			} while (!Isvalidation | saltos < 0);
+
+			int num_ite;
+			Console.WriteLine("Cuantas iteraciones necesitas?: ");
+			bool Isvalidation3 = false;
+			do
+			{
+				Isvalidation3 = (Int32.TryParse(Console.ReadLine(), out num_ite));
+				if (!Isvalidation3 | num_ite < 0)
+				{
+					Console.WriteLine("Valor Invalido,porfavor ingrese un valor numérico");
+					Console.WriteLine("Cuantas iteraciones necesitas?: ");
+				}
+			} while (!Isvalidation3 | num_ite < 0);
+
+
+			Console.WriteLine(Eulerm(X0, Y0, saltos, num_ite));
+
+		}
+
+
+		static bool Eulerm(int X, int Y, float salto, int iteracion)
+		{
+			Console.WriteLine("*****   Resultados del metodo de Euler   *****");
+			double XN = X;
+			double YEuler = Y;
+			double YReal = Y;
+			int NI = 0;
+			int iter = 1;
+			double YEulerm = Y;
+
+			double error = (((YReal - YEuler) / (YReal)) * 100);
+			//error em
+			double errorm = (((YEuler - YEulerm) / (YEulerm)) * 100);
+			
+			
+			XN = Math.Round(XN, 6);
+			YReal = Math.Round(YReal, 6);
+			YEuler = Math.Round(YEuler, 6);
+			errorm = Math.Round(errorm, 6);
+			YEulerm = Math.Round(YEulerm, 6);
+			error = Math.Round(error, 6);
+			Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|{5,15}|{6,15}|", "Iteraccion", "Xn", "Y Real", "Yeuler", "Error Euler", "YeulerM.", "Error euler M."));
+			Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|{5,15}|{6,15}|", NI, XN, YReal, YEuler, error, YEulerm, errorm));
+			NI = NI + 1;
+
+
+			do
+			{
+				int NIMostrar = NI;
+				NI = NI + 1;
+				//formula de yn+1=yn+hf(xn,yn)
+				YEuler = YEuler + (salto * ((Math.Sqrt(YEuler) / ((2 * (XN) + 1)))));
+				//formula xn+1= xn+h
+				XN = XN + salto;
+				//formula de y0=log sobre 4 al 2
+				YReal = (((Math.Log((2 * XN) + 1)) / 4) + 2) * (((Math.Log((2 * XN) + 1)) / 4) + 2);
+				//Truncado en 6 decimales
+				YReal = Math.Round(YReal, 6);
+				YEuler = Math.Round(YEuler, 6);
+				//error de euler
+				double errorEuler = Math.Abs((((YReal - YEuler) / YReal) * 100));
+				errorEuler = Math.Round(errorEuler, 6);
+				XN = Math.Round(XN, 6);
+
+				//formula de yn+1=yn+h*k
+				YEulerm = YEulerm + (salto * ((Math.Sqrt(YEulerm) / ((2 * (XN) + 1)))));
+				YEulerm = (YEulerm-1) + (salto * (1/2) * ((Math.Sqrt(YEulerm) / ((2 * (XN) + 1)))));
+				YEulerm = Math.Round(YEulerm, 6);
+				//error de euler
+				double errorEulerm = Math.Abs((((YReal - YEuler) / YReal) * 100));
+				errorEulerm = Math.Round(errorEulerm, 6);
+				XN = Math.Round(XN, 6);
+
+
+
+				Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|{3,15}|{4,15}|{5,15}|{6,15}|", NIMostrar, XN, YReal, YEuler, errorEuler, YEulerm, errorEulerm));
+				NIMostrar = NIMostrar + 1;
+				iter++;
+			} while (iter <= iteracion);
+			Console.WriteLine();
+			Console.WriteLine("Presione Enter para Regresar");
+			Console.ReadKey();
+			return true;
+		}
+
+
+		static void TeoriaEuler()
+		{
+			Console.WriteLine("****************El Metodo de Euler****************");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("En matemática y computación, el método de Euler, llamado así en honor a Leonhard Euler, es un procedimiento de integración numérica para resolver ecuaciones diferenciales ordinarias (EDO) a partir de un valor inicial dado. El método de Euler es el más simple de los métodos numéricos para resolver un problema de valor inicial, y el más simple de los Métodos de Runge-Kutta. El método de Euler es nombrado por Leonhard Euler, quien lo trató en su libro Institutionum calculi integralis (publicado en 1768-1770).");
+			Console.WriteLine();
+			Console.WriteLine("El método de Euler es un método de primer orden, lo que significa que el error local es proporcional al cuadrado del tamaño del paso, y el error global es proporcional al tamaño del paso. El método de Euler regularmente sirve como base para construir métodos más complejos. ");
+			Console.WriteLine();
+			Console.WriteLine("Presione Enter para Regresar");
+			Console.ReadLine();
+		}
+
+		static void Portada()
+		{
+			Console.WriteLine("----------------------Universidad Politecnica de Pachuca----------------------");
+			Console.WriteLine("Ingieneria de Software");
+			Console.WriteLine("Matematicas Para Ingeneria II");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("Catedratico: Marco Waldo Angeles Tena");
+			Console.WriteLine("SFTW_05_02");
+			Console.WriteLine("Grupo: 2      110296");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("Alumnos:");
+			Console.WriteLine("Angela Benitez Hernandez 2031118740");
+			Console.WriteLine("Jonathan Ulises Hernandez Daboxtha 2031118757");
+			Console.WriteLine("Yesenia Islas Rivera 2031118900");
+			Console.WriteLine("Jesús Demetrio Peña Vargas 2031118729");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("Fecha de Solicitud:  17 de Marzo de 2022");
+			Console.WriteLine("Fecha de Entrega: Miercoles, 23 de Marzo de 2022");
+			Console.WriteLine();
+			Console.WriteLine("Presione Enter para Regresar");
+			Console.ReadLine();
+			Console.ReadKey();
+			Console.In.ReadLine();
+		}
+
+	}
+}
